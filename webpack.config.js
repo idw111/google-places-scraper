@@ -2,7 +2,7 @@ var webpack = require('webpack');
 
 module.exports = {
 	cache: true,
-	entry: './public/javascripts/main.js',
+	entry: './client/main.js',
 	output: {
 		path: './public/javascripts',
 		filename: 'bundle.js'
