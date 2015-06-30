@@ -1,5 +1,6 @@
-# google-places-scraper
+# Google Places Scraper
 > scrapes POI data from google maps
+
 - npm run webpack
 - nodemon index.js
 - access http://localhost:4000/ to scrape
