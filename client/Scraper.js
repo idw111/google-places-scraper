@@ -6,7 +6,7 @@ var Cookie = require('js-cookie');
 
 var Scraper = {
 
-	step: 0.02,
+	step: 0.04,
 
 	region: null,
 	
@@ -74,7 +74,7 @@ var Scraper = {
 			return true;
 		}
 
-		Scraper.currentPoint.lng += Scraper.step;		
+		Scraper.currentPoint.lng += Scraper.step;
 		if (Scraper.currentPoint.lat > Scraper.dstPoint.lat()) {
 			if (!Scraper.updateRegion()) return false;
 			Scraper.currentPoint = null;
@@ -84,18 +84,19 @@ var Scraper = {
 		if (Scraper.currentPoint.lng > Scraper.dstPoint.lng()) {
 			Scraper.currentPoint.lng = Scraper.srcPoint.lng();
 			Scraper.currentPoint.lat += Scraper.step;
-			console.log('new row', Scraper.currentPoint);
 		}
 
 		return true;
 	},
 
 	scrape: function(keyword) {
-		Scraper.updateBounds();
+		if (!Scraper.updateBounds()) return;
+
 		var bounds = new google.maps.LatLngBounds(
 			new google.maps.LatLng(Scraper.currentPoint.lat, Scraper.currentPoint.lng),
 			new google.maps.LatLng(Scraper.currentPoint.lat + Scraper.step, Scraper.currentPoint.lng + Scraper.step)
 		);
+
 		async.waterfall([
 			function(done) {
 				Places.searchBounds(keyword, bounds, function(err, results) {
@@ -129,7 +130,7 @@ var Scraper = {
 			Scraper.drawRect(bounds);
 			setTimeout(function() {
 				Scraper.scrape(keyword);
-			}, 500);
+			}, 200);
 		});
 	}
 

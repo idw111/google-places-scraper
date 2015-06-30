@@ -21,7 +21,7 @@ var Places = {
 	flatten: function(place) {
 		return {
 			address: place.formatted_address,
-			location: [place.geometry.location.k, place.geometry.location.D],
+			location: [place.geometry.location.lat(), place.geometry.location.lng()],
 			name: place.name,
 			place_id: place.place_id,
 			reference: place.reference
@@ -32,7 +32,6 @@ var Places = {
 		if (!Places.service) return done({message: 'Google Places Service 객체가 없습니다'});
 		Places.service.textSearch({bounds: bounds, query: keyword}, function(places, status) {
 			if (status === 'OVER_QUERY_LIMIT') return done({code: 1, message: '쿼리 한계를 넘었습니다'});
-
 			var results = [];
 			for (var i in places) {
 				var place = places[i];
@@ -41,7 +40,7 @@ var Places = {
 				Places.poi[place.place_id] = true;
 
 				var marker = new google.maps.Marker({
-					position: new google.maps.LatLng(place.geometry.location.k, place.geometry.location.D), 
+					position: new google.maps.LatLng(place.geometry.location.lat(), place.geometry.location.lng()), 
 					title: place.name
 				});
 				marker.setMap(Places.map);
